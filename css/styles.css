@@ -1,0 +1,23 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.map {
+    height: 100%;
+    width:100%;
+    position: absolute;
+}
+
+.table-titles{
+width: 25% !important;
+z-index: 1;
+position: fixed;
+background: white !important;
+}
+
+td:hover{
+    cursor: pointer;
+    background: rgb(177, 177, 177);
+    color: white;
+}
