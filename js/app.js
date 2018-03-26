@@ -1,12 +1,26 @@
 var markers = []
-// this view model function takes the locations data into its constructor
+// self view model function takes the locations data into its constructor
 function ViewModel(data) {
-    this.locations = data;
-    this.searchInput = ko.observable("");
-    this.filter = function(){
+    self = this;
+
+    self.locations = data;
+    self.searchInput = ko.observable("");
+    self.locationFilter = ko.computed(function() {
+        var locationsFiltered = [];
+        if ( self.searchInput == "") {
+            return self.locations;
+        }
+         for (let i = 0; i < self.locations.length; i++) {
+            if(self.locations[i].title.toLowerCase().includes(self.searchInput().toLowerCase())) {
+                locationsFiltered.push(self.locations[i]);
+         }        
+        }
+        return locationsFiltered;
+    }); 
+    self.filter = function(){
         for (let i = 0; i < markers.length; i++) {
             // if the title includes any letter of search input
-            if ( markers[i].title.toLowerCase().includes(this.searchInput().toLowerCase())){
+            if ( markers[i].title.toLowerCase().includes(self.searchInput().toLowerCase())){
                 markers[i].setVisible(true);
                 
             }
@@ -63,8 +77,8 @@ function initMap() {
         markers.push(marker);
         // Create an onclick event to open the largeInfowindow at each marker.
         marker.addListener('click', function () {
-            populateInfoWindow(this);
-            toggleAnimation(this)
+            populateInfoWindow(self);
+            toggleAnimation(self)
         });
 
 
@@ -73,7 +87,7 @@ function initMap() {
 }
 
 function populateInfoWindow(marker) {
-    // Check to make sure the largeInfowindowis not already opened on this marker.
+    // Check to make sure the largeInfowindowis not already opened on self marker.
     if (largeInfowindow.marker != marker) {
         // Clear the largeInfowindow content to give the streetview time to load.
         largeInfowindow.setContent('');
