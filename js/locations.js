@@ -1,41 +1,57 @@
 var Locations = [{
-        title: 'Supermercado Bravo',
+        title: 'AMD',
         position: {
-            lat: 19.453417,
-            lng: -70.685813,
+            lat: 37.383065,
+            lng: -121.970346,
         },
         id : 0
     },
     {
-        title: 'McDonalds',
+        title: 'Google',
         position: {
-            lat: 19.461489,
-            lng: -70.685712,
+            lat: 37.423288,
+            lng: -122.084538,
         },
         id : 1
     },
     {
-        title: 'Supermercado Nacional',
+        title: 'NETFLIX',
         position: {
-            lat: 19.458214,
-            lng: -70.675412,
+            lat: 37.257251,
+            lng: -121.964264,
         },
         id : 2
     },
     {
-        title: 'Ayuntamiento',
+        title: 'Tesla Motors',
         position: {
-            lat: 19.457361,
-            lng: -70.688801,
+            lat: 37.493571,
+            lng: -121.939993,
         },
         id : 3
     },
     {
-        title: 'Dubai Club 2.5',
+        title: 'NVIDIA',
         position: {
-            lat: 19.457946,
-            lng: -70.691954,
+            lat: 37.370867,
+            lng: -121.967003,
         },
         id : 4
+    },
+    {
+        title: 'Intel',
+        position: {
+            lat: 37.386402,
+            lng: -121.964836,
+        },
+        id : 5
+    },
+    {
+        title: 'Udacity',
+        position: {
+            lat: 37.399949,
+            lng: -122.108496,
+        },
+        id : 6
     },
 ]

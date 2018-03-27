@@ -1,32 +1,31 @@
-var markers = []
+var markers = [];
 // self view model function takes the locations data into its constructor
 function ViewModel(data) {
     self = this;
 
     self.locations = data;
     self.searchInput = ko.observable("");
-    self.locationFilter = ko.computed(function() {
+    self.locationFilter = ko.computed(function () {
         var locationsFiltered = [];
-        if ( self.searchInput == "") {
+        if (self.searchInput == "") {
             return self.locations;
         }
-         for (let i = 0; i < self.locations.length; i++) {
-            if(self.locations[i].title.toLowerCase().includes(self.searchInput().toLowerCase())) {
+        for (let i = 0; i < self.locations.length; i++) {
+            if (self.locations[i].title.toLowerCase().includes(self.searchInput().toLowerCase())) {
                 locationsFiltered.push(self.locations[i]);
-         }        
+            }
         }
         return locationsFiltered;
-    }); 
-    self.filter = function(){
+    });
+    self.filter = function () {
         for (let i = 0; i < markers.length; i++) {
             // if the title includes any letter of search input
-            if ( markers[i].title.toLowerCase().includes(self.searchInput().toLowerCase())){
+            if (markers[i].title.toLowerCase().includes(self.searchInput().toLowerCase())) {
                 markers[i].setVisible(true);
-                
-            }
-            else{
+
+            } else {
                 markers[i].setVisible(false);
-               
+
             }
         }
     }
@@ -35,11 +34,11 @@ function ViewModel(data) {
 
 var viewModel = new ViewModel(Locations);
 // call the filter everytime the input gets a value
-viewModel.searchInput.subscribe(function(){
+viewModel.searchInput.subscribe(function () {
     viewModel.filter();
 });
 
-
+// toogle de animation when you click on a marker
 function toggleAnimation(marker) {
     if (marker.getAnimation()) {
         marker.setAnimation(null);
@@ -52,8 +51,8 @@ function toggleAnimation(marker) {
 function initMap() {
     // Constructor creates a new map - only center and zoom are required.
     map = new google.maps.Map(document.getElementById('map'), {
-        center: Locations[1]['position'],
-        zoom: 16,
+        center: Locations[0]['position'],
+        zoom: 12,
     });
 
     largeInfowindow = new google.maps.InfoWindow();
@@ -77,8 +76,8 @@ function initMap() {
         markers.push(marker);
         // Create an onclick event to open the largeInfowindow at each marker.
         marker.addListener('click', function () {
-            populateInfoWindow(self);
-            toggleAnimation(self)
+            populateInfoWindow(this);
+            toggleAnimation(this)
         });
 
 
@@ -96,37 +95,33 @@ function populateInfoWindow(marker) {
         largeInfowindow.addListener('closeclick', function () {
             largeInfowindow.marker = null;
         });
-        var streetViewService = new google.maps.StreetViewService();
-        var radius = 50;
-        // In case the status is OK, which means the pano was found, compute the
-        // position of the streetview image, then calculate the heading, then get a
-        // panorama from that and set the options
-        function getStreetView(data, status) {
-            if (status == google.maps.StreetViewStatus.OK) {
-                var nearStreetViewLocation = data.location.latLng;
-                var heading = google.maps.geometry.spherical.computeHeading(nearStreetViewLocation, marker.position);
-                largeInfowindow.setContent('<div><h3>' + marker.title + '</h3></div><div id="pano"></div>');
-                var panoramaOptions = {
-                    position: nearStreetViewLocation,
-                    pov: {
-                        heading: heading,
-                        pitch: 30
-                    }
-                };
-                var panorama = new google.maps.StreetViewPanorama(
-                    document.getElementById('pano'), panoramaOptions);
-            } else {
 
-                largeInfowindow.setContent('<div><h3>' + marker.title + '</h3></div><div> </div>');
-            }
-        }
-        // Use streetview service to get the closest streetview image within
-        // 50 meters of the markers position
-        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-        // Open thelargeInfowindow on the correct marker.
-        largeInfowindow.open(map, marker);
+        // Foursquare API 
+        var baseUrl = 'https://api.foursquare.com/v2/venues/search?';
+        ClientID = 'FVF5KYDFF3BSDWOZ52NJEKHVIYCMVJB4C4DMPUCSX2LGYV2E';
+        ClientSecret = 'PV14NKEGXRB43D1XCC41FGYAQ4PQQ4P2AQDXNCYMJGR0MUW2';
+        foursquareUrl = baseUrl +'limit=1&ll='+marker.getPosition().lat()+','+marker.getPosition().lng()+'&client_id='+ClientID+'&client_secret='+ClientSecret+'&v=20140806&m=foursquare'
+        $.getJSON(foursquareUrl)
+            .done(function (data) {
+                var currentVenue = data.response.venues[0];
+                console.log(currentVenue)
+                var placeName = currentVenue.name;
+                var placeAddress = currentVenue.location.formattedAddress;
+                var lat =  currentVenue.location.lat;
+                var lng =  currentVenue.location.lng;
+                windowContent = '<div><p><strong>Name: </strong>' + placeName + '</p>' +
+                    '<p><strong>Address: </strong>  ' + placeAddress + '</p>'+
+                    '<p>'+lat+', '+lng+'</p>' +'</div>';
+                // Creating the content for the info window
+                largeInfowindow.setContent('<div class="info-window" ><h4>' + marker.title + '</h4></div>' + windowContent);
+                // Assign the infowindow to its marker
+                largeInfowindow.open(map, marker);
+            })
+            .fail(function (data) {
+                alert("something went wrong with Foursquare");
+
+            })
     }
 }
-
 // Activates knockout.js
 ko.applyBindings(viewModel);
