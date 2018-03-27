@@ -123,5 +123,9 @@ function populateInfoWindow(marker) {
             })
     }
 }
+
+var googleError = function () {
+    alert("something went wrong with the Google Maps Api")
+}
 // Activates knockout.js
 ko.applyBindings(viewModel);
