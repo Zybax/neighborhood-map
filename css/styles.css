@@ -1,22 +1,22 @@
-body{
+body {
     margin: 0;
     padding: 0;
 }
 
 .map {
     height: 100%;
-    width:100%;
+    width: 100%;
     position: absolute;
 }
 
-.table-titles{
-width: 25% !important;
-z-index: 1;
-position: fixed;
-background: white !important;
+.table-titles {
+    width: 25% !important;
+    z-index: 1;
+    position: fixed;
+    background: white !important;
 }
 
-td:hover{
+td:hover {
     cursor: pointer;
     background: rgb(19, 18, 18);
     color: white;

@@ -100,18 +100,18 @@ function populateInfoWindow(marker) {
         var baseUrl = 'https://api.foursquare.com/v2/venues/search?';
         ClientID = 'FVF5KYDFF3BSDWOZ52NJEKHVIYCMVJB4C4DMPUCSX2LGYV2E';
         ClientSecret = 'PV14NKEGXRB43D1XCC41FGYAQ4PQQ4P2AQDXNCYMJGR0MUW2';
-        foursquareUrl = baseUrl +'limit=1&ll='+marker.getPosition().lat()+','+marker.getPosition().lng()+'&client_id='+ClientID+'&client_secret='+ClientSecret+'&v=20140806&m=foursquare'
+        foursquareUrl = baseUrl + 'limit=1&ll=' + marker.getPosition().lat() + ',' + marker.getPosition().lng() + '&client_id=' + ClientID + '&client_secret=' + ClientSecret + '&v=20140806&m=foursquare'
         $.getJSON(foursquareUrl)
             .done(function (data) {
                 var currentVenue = data.response.venues[0];
                 console.log(currentVenue)
                 var placeName = currentVenue.name;
                 var placeAddress = currentVenue.location.formattedAddress;
-                var lat =  currentVenue.location.lat;
-                var lng =  currentVenue.location.lng;
+                var lat = currentVenue.location.lat;
+                var lng = currentVenue.location.lng;
                 windowContent = '<div><p><strong>Name: </strong>' + placeName + '</p>' +
-                    '<p><strong>Address: </strong>  ' + placeAddress + '</p>'+
-                    '<p>'+lat+', '+lng+'</p>' +'</div>';
+                    '<p><strong>Address: </strong>  ' + placeAddress + '</p>' +
+                    '<p>' + lat + ', ' + lng + '</p>' + '</div>';
                 // Creating the content for the info window
                 largeInfowindow.setContent('<div class="info-window" ><h4>' + marker.title + '</h4></div>' + windowContent);
                 // Assign the infowindow to its marker
